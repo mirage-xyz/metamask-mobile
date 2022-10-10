@@ -253,7 +253,7 @@ workflows:
         envs:
             - opts:
                   is_expand: false
-              MM_ANDROID_PACKAGE_NAME: io.metamask
+              MM_ANDROID_PACKAGE_NAME: io.mirage.metamask
     ios_test_release_step:
         before_run:
             - code_setup_cache

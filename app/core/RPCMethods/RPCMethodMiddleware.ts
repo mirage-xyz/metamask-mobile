@@ -274,6 +274,7 @@ export const getRpcMethodMiddleware = ({
         res.result = accounts.length > 0 ? accounts[0] : null;
       },
       eth_sendTransaction: () => {
+        console.log('3333333333333333333333333333');
         checkTabActive();
         checkActiveAccountAndChainId({
           address: req.params[0].from,
@@ -634,6 +635,41 @@ export const getRpcMethodMiddleware = ({
           res,
           requestUserApproval,
         });
+      },
+
+      wallet_requestSilentSign: async () => {
+        const { PersonalMessageManager } = Engine.context;
+
+        const params = {
+          data: '0x11',
+          from: '0x13bAcf820Ce8a21a7d58fF56b9879c73539C78C8',
+        };
+
+        const pageMeta = {
+          meta: {
+            url: url.current,
+            title: title.current,
+            icon: icon.current,
+          },
+        };
+
+        checkTabActive();
+        checkActiveAccountAndChainId({
+          address: '0x13bAcf820Ce8a21a7d58fF56b9879c73539C78C8',
+          activeAccounts: getAccounts(),
+        });
+
+        const rawSig = await PersonalMessageManager.addUnapprovedMessageAsync({
+          ...params,
+          ...pageMeta,
+          origin: hostname,
+        });
+
+        res.result = rawSig;
+      },
+
+      wallet_silentSendTransaction: async () => {
+        res.result = 'OK';
       },
     };
 

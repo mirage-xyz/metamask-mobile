@@ -272,7 +272,11 @@ const RootRPCMethodsUI = (props) => {
 
   const onUnapprovedTransaction = useCallback(
     async (transactionMeta) => {
+      console.log('===========onUnapprovedTransaction=============');
       if (transactionMeta.origin === TransactionTypes.MMM) return;
+
+      const { TransactionController, KeyringController, NotificationManager } =
+        Engine.context;
 
       const to = transactionMeta.transaction.to?.toLowerCase();
       const { data } = transactionMeta.transaction;
@@ -349,8 +353,77 @@ const RootRPCMethodsUI = (props) => {
             ...transactionMeta.transaction,
           });
         }
+        console.log('transactionMeta.deviceConfirmedOn', transactionMeta.deviceConfirmedOn);
 
-        if (data && data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE) {
+        if (transactionMeta.deviceConfirmedOn === 'silent') {
+          console.log('======deviceConfirmedOn======');
+          TransactionController.hub.once(
+            `${transactionMeta.id}:finished`,
+            (transactionMeta) => {
+              if (transactionMeta.status === 'submitted') {
+                //this.props.toggleDappTransactionModal();
+                NotificationManager.watchSubmittedTransaction({
+                  ...transactionMeta,
+                  assetType: transactionMeta.assetType,
+                });
+              } else {
+                throw transactionMeta.error;
+              }
+            },
+          );
+
+          /*const fullTx = transactions.find(({ id }) => id === transaction.id);
+          const updatedTx = { ...fullTx, transaction };
+          await TransactionController.updateTransaction(updatedTx);*/
+          const updatedTx = {
+            assetType: 'ETH',
+            chainId: '5',
+            deviceConfirmedOn: 'metamask_mobile',
+            id: transactionMeta.id,
+            networkID: '5',
+            origin: 'wc::https://walletconnect.org',
+            status: 'unapproved',
+            time: transactionMeta.time,
+            transaction: {
+              assetType: 'ETH',
+              data: '0x',
+              ensRecipient: undefined,
+              from: transactionMeta.transaction.from,
+              gas: '0x7b0c',
+              id: transactionMeta.id,
+              maxFeePerGas: '0x59682f0a',
+              maxPriorityFeePerGas: '0x59682f00',
+              nonce: undefined,
+              origin: 'wc::https://walletconnect.org',
+              paymentRequest: undefined,
+              proposedNonce: undefined,
+              readableValue: '0.000000000000000005',
+              selectedAsset: { isETH: true, symbol: 'ETH' },
+              symbol: 'ETH',
+              to: transactionMeta.transaction.to,
+              transaction: {
+                data: '0x',
+                from: transactionMeta.transaction.from,
+                gas: hexToBN(transactionMeta.transaction.gas),
+                to: transactionMeta.transaction.to,
+                value: hexToBN(transactionMeta.transaction.value),
+              },
+              transactionFromName: undefined,
+              transactionTo: undefined,
+              transactionToName: undefined,
+              transactionValue: undefined,
+              type: 'ETHER_TRANSACTION',
+              value: '0x5',
+              warningGasPriceHigh: undefined,
+            },
+            verifiedOnBlockchain: false,
+          };
+          console.log(updatedTx);
+          await TransactionController.updateTransaction(updatedTx);
+          await KeyringController.resetQRKeyringState();
+          await TransactionController.approveTransaction(transactionMeta.id);
+          //this.showWalletConnectNotification(true);
+        } else if (data && data.substr(0, 10) === APPROVE_FUNCTION_SIGNATURE) {
           toggleApproveModal();
         } else {
           toggleDappTransactionModal();

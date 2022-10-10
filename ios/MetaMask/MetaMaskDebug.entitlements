@@ -12,8 +12,8 @@
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
-		<string>merchant.io.metamask</string>
-		<string>merchant.io.metamask-test</string>
+		<string>merchant.io.mirage.metamask</string>
+		<string>merchant.io.mirage.metamask-test</string>
 	</array>
 </dict>
 </plist>

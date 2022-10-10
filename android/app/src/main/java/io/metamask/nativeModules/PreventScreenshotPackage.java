@@ -1,4 +1,4 @@
-package io.metamask.nativeModules;
+package io.mirage.metamask.nativeModules;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

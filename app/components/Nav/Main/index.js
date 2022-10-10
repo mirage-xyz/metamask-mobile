@@ -150,7 +150,7 @@ const Main = (props) => {
       if (backgroundMode.current) {
         removeNotVisibleNotifications();
         BackgroundTimer.runBackgroundTimer(async () => {
-          await Engine.refreshTransactionHistory();
+          //await Engine.refreshTransactionHistory();
         }, AppConstants.TX_CHECK_BACKGROUND_FREQUENCY);
       }
     },

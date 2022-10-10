@@ -13,6 +13,12 @@ import { AppRegistry, LogBox } from 'react-native';
 import Root from './app/components/Views/Root';
 import { name } from './app.json';
 
+
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+
+
 // List of warnings that we're ignoring
 LogBox.ignoreLogs([
   '{}',
@@ -64,6 +70,22 @@ LogBox.ignoreLogs([
 /* Uncomment and comment regular registration below */
 // import Storybook from './storybook';
 // AppRegistry.registerComponent(name, () => Storybook);
+
+const showNotification = (_title, _text) => {
+  console.log('Showing notification');
+  PushNotification.localNotification({
+    title: _title,
+    message: _text,
+  });
+};
+firebase.messaging().setBackgroundMessageHandler(async (response) => {
+  console.log('background message geldi');
+  console.log(response);
+  showNotification(
+    'Background',
+    response.notification ? response.notification.title : response.data.text,
+  );
+});
 
 /**
  * Application entry point responsible for registering root component

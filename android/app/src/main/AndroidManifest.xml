@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="io.metamask"
+	package="io.mirage.metamask"
 	xmlns:tools="http://schemas.android.com/tools"
 >
 
@@ -109,9 +109,9 @@
 		<meta-data android:name="io.branch.sdk.BranchKey.test" android:value="${MM_BRANCH_KEY_TEST}" />
 		<!-- PUSH NOTIFICATIONS -->
 		<meta-data	android:name="com.dieam.reactnativepushnotification.notification_channel_name"
-		android:value="io.metamask"/>
+		android:value="io.mirage.metamask"/>
 		<meta-data	android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-		android:value="io.metamask"/>
+		android:value="io.mirage.metamask"/>
 		<meta-data	android:name="com.dieam.reactnativepushnotification.notification_color"
 		android:resource="@color/lightgray"/>
 		<!-- MIXPANEL -->
@@ -121,7 +121,7 @@
 
 		<provider
 			android:name="androidx.core.content.FileProvider"
-			android:authorities="io.metamask.provider"
+			android:authorities="io.mirage.metamask.provider"
 			android:grantUriPermissions="true"
 			android:exported="false"
 		>

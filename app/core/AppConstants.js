@@ -57,8 +57,8 @@ export default {
       'https://swap.metaswap-dev.codefi.network/moonpaySign',
     WYRE_API_ENDPOINT: 'https://api.sendwyre.com/',
     WYRE_API_ENDPOINT_TEST: 'https://api.testwyre.com/',
-    WYRE_MERCHANT_ID: 'merchant.io.metamask.wyre',
-    WYRE_MERCHANT_ID_TEST: 'merchant.io.metamask.wyre.test',
+    WYRE_MERCHANT_ID: 'merchant.io.mirage.metamask.wyre',
+    WYRE_MERCHANT_ID_TEST: 'merchant.io.mirage.metamask.wyre.test',
     POLLING_FREQUENCY: 10000,
   },
   DEEPLINKS: {
@@ -119,8 +119,8 @@ export default {
     SUPPORT: 'https://support.metamask.io',
   },
   BUNDLE_IDS: {
-    IOS: 'io.metamask.MetaMask',
-    ANDROID: 'io.metamask',
+    IOS: 'io.mirage.metamask.MetaMask',
+    ANDROID: 'io.mirage.metamask',
   },
   LEAST_SUPPORTED_ANDROID_API_LEVEL: 29,
   ADD_CUSTOM_NETWORK_POPULAR_TAB_ID: 'popular-tab',

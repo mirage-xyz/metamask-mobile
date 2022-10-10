@@ -1,4 +1,4 @@
-package io.metamask;
+package io.mirage.metamask;
 
 import android.content.Intent;
 import android.os.Bundle;

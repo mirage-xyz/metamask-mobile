@@ -157,7 +157,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
 	defaultConfig {
-		applicationId "io.metamask"
+		applicationId "io.mirage.metamask"
 		minSdkVersion rootProject.ext.minSdkVersion
 		targetSdkVersion rootProject.ext.targetSdkVersion
 		versionCode 950
@@ -270,6 +270,9 @@ dependencies {
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 	implementation "com.android.installreferrer:installreferrer:2.2"
 
+  implementation platform('com.google.firebase:firebase-bom:30.4.1')
+  implementation 'com.google.firebase:firebase-analytics'
+
 	debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
@@ -300,3 +303,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+apply plugin: "com.google.gms.google-services"

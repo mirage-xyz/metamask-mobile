@@ -30,4 +30,5 @@ curl --proto '=https' --tlsv1.2 -LJO https://github.com/facebook/react-native/ar
 tar -zxvf react-native-${REACT_NATIVE_VERSION}.tar.gz react-native-${REACT_NATIVE_VERSION}/packages/react-native-codegen/
 mv react-native-0.66.0/packages/react-native-codegen/ .
 # cleanup
-rm react-native-${REACT_NATIVE_VERSION}.tar.gz
+#rm react-native-${REACT_NATIVE_VERSION}.tar.gz
+pwd

@@ -56,6 +56,12 @@ import Toast, {
 } from '../../../component-library/components/Toast';
 import { TurnOffRememberMeModal } from '../../../components/UI/TurnOffRememberMeModal';
 
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import {Platform} from 'react-native';
+import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+
 const Stack = createStackNavigator();
 /**
  * Stack navigator responsible for the onboarding process
@@ -303,6 +309,37 @@ const App = ({ userLoggedIn }) => {
     startAnimation();
   }, [isAuthChecked]);
 
+  useEffect(() => {
+    async function startApp() {
+      const existingUser = await AsyncStorage.getItem(EXISTING_USER);
+      try {
+        const currentVersion = await getVersion();
+        const savedVersion = await AsyncStorage.getItem(CURRENT_APP_VERSION);
+        if (currentVersion !== savedVersion) {
+          if (savedVersion)
+            await AsyncStorage.setItem(LAST_APP_VERSION, savedVersion);
+          await AsyncStorage.setItem(CURRENT_APP_VERSION, currentVersion);
+        }
+
+        const lastVersion = await AsyncStorage.getItem(LAST_APP_VERSION);
+        if (!lastVersion) {
+          if (existingUser) {
+            // Setting last version to first version if user exists and lastVersion does not, to simulate update
+            await AsyncStorage.setItem(LAST_APP_VERSION, '0.0.1');
+          } else {
+            // Setting last version to current version so that it's not treated as an update
+            await AsyncStorage.setItem(LAST_APP_VERSION, currentVersion);
+          }
+        }
+      } catch (error) {
+        Logger.error(error);
+      }
+    }
+
+    startApp();
+    FirebaseInit();
+  }, []);
+
   const setNavigatorRef = (ref) => {
     if (!prevNavigator.current) {
       setNavigator(ref);
@@ -420,5 +457,76 @@ const App = ({ userLoggedIn }) => {
 const mapStateToProps = (state) => ({
   userLoggedIn: state.user.userLoggedIn,
 });
+
+function FirebaseInit() {
+  const getToken = () => {
+    console.log('getToken');
+    firebase
+      .messaging()
+      .getToken(firebase.app().options.messagingSenderId)
+      .then((token) => {
+        global._firebaseToken = token;
+        console.log(token);
+      })
+      .catch(e => console.log(e));
+  };
+
+  const showNotification = (_title, _text) => {
+    console.log('Showing notification');
+    PushNotification.localNotification({
+      title: _title,
+      message: _text,
+    });
+  };
+
+  const registerForRemoteMessages = () => {
+    console.log('registerForRemoteMessages');
+    firebase
+      .messaging()
+      .registerDeviceForRemoteMessages()
+      .then(() => {
+        console.log('Registered');
+        requestPermissions();
+      })
+      .catch(e => console.log(e));
+  };
+
+  const onMessage = () => {
+    console.log('onMessage');
+    firebase.messaging().onMessage((response) => {
+      console.log('message geldi');
+      console.log(response);
+      showNotification(
+        'onMessage',
+        response.notification
+          ? response.notification.title
+          : response.data.text,
+      );
+    });
+  };
+
+  const requestPermissions = () => {
+    console.log('requestPermissions');
+    firebase
+      .messaging()
+      .requestPermission()
+      .then((status: FirebaseMessagingTypes.AuthorizationStatus) => {
+        if (status === 1) {
+          console.log('Authorized');
+          onMessage();
+        } else {
+          console.log('Not authorized');
+        }
+      })
+      .catch(e => console.log(e));
+  };
+
+  getToken();
+  if (Platform.OS === 'ios') {
+    registerForRemoteMessages();
+  } else {
+    onMessage();
+  }
+}
 
 export default connect(mapStateToProps)(App);

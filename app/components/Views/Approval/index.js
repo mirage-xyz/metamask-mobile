@@ -159,7 +159,7 @@ class Approval extends PureComponent {
   handleAppStateChange = (appState) => {
     try {
       if (appState !== 'active') {
-        const { transaction, transactions } = this.props;
+        /*const { transaction, transactions } = this.props;
         const currentTransaction = transactions.find(
           (tx) => tx.id === transaction.id,
         );
@@ -170,7 +170,7 @@ class Approval extends PureComponent {
           Engine.context.TransactionController.cancelTransaction(
             transaction.id,
           );
-        this.props.toggleDappTransactionModal(false);
+        this.props.toggleDappTransactionModal(false);*/
       }
     } catch (e) {
       if (e) {
@@ -309,6 +309,7 @@ class Approval extends PureComponent {
    * Callback on confirm transaction
    */
   onConfirm = async ({ gasEstimateType, EIP1559GasData, gasSelected }) => {
+    console.log('===========onConfirm=============');
     const { TransactionController, KeyringController } = Engine.context;
     const {
       transactions,
@@ -355,6 +356,8 @@ class Approval extends PureComponent {
 
       const fullTx = transactions.find(({ id }) => id === transaction.id);
       const updatedTx = { ...fullTx, transaction };
+      console.log("...................................");
+      console.log(updatedTx);
       await TransactionController.updateTransaction(updatedTx);
       await KeyringController.resetQRKeyringState();
       await TransactionController.approveTransaction(transaction.id);

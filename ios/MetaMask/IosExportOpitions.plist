@@ -4,8 +4,8 @@
 <dict>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>io.metamask.MetaMask</key>
-		<string>Bitrise AppStore io.metamask.MetaMask</string>
+		<key>io.mirage.metamask.MetaMask</key>
+		<string>Bitrise AppStore io.mirage.metamask.MetaMask</string>
 	</dict>
 	<key>uploadSymbols</key>
 	<true/>

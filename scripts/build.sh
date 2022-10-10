@@ -140,7 +140,7 @@ prebuild_android(){
 	yes | cp -rf app/core/InpageBridgeWeb3.js android/app/src/main/assets/.
 	# Copy fonts with iconset
 	yes | cp -rf ./app/fonts/Metamask.ttf ./android/app/src/main/assets/fonts/Metamask.ttf
-	
+
 	if [ "$PRE_RELEASE" = false ] ; then
 		if [ -e $ANDROID_ENV_FILE ]
 		then
@@ -214,8 +214,8 @@ buildIosReleaseE2E(){
 		echo "$IOS_ENV" | tr "|" "\n" > $IOS_ENV_FILE
 		echo "Pre-release E2E Build started..."
 		brew install watchman
-		cd ios 
-		generateArchivePackages 
+		cd ios
+		generateArchivePackages
 		# Generate sourcemaps
 		yarn sourcemaps:ios
 	else
@@ -229,7 +229,7 @@ buildIosReleaseE2E(){
 
 buildAndroidRelease(){
 	if [ "$PRE_RELEASE" = false ] ; then
-		adb uninstall io.metamask || true
+		adb uninstall io.mirage.metamask || true
 	fi
 	prebuild_android
 

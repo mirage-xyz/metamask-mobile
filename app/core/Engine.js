@@ -94,6 +94,7 @@ class Engine {
               end: (arg0: undefined, arg1: undefined) => void,
             ) => {
               const { TransactionController } = this.context;
+              console.log('1111111111111111111111111111111111');
               try {
                 const hash = await (
                   await TransactionController.addTransaction(

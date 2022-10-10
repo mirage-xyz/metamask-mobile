@@ -11,4 +11,5 @@ export default {
     ERC721: 'ERC721',
   },
   MMM: 'MetaMask Mobile',
+  SILENT: 'Silent',
 };

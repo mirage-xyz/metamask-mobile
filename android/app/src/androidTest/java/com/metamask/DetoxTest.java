@@ -1,4 +1,4 @@
-package io.metamask;
+package io.mirage.metamask;
 
 import com.wix.detox.Detox;
 

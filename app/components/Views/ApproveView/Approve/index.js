@@ -379,11 +379,11 @@ class Approve extends PureComponent {
 
   handleAppStateChange = (appState) => {
     if (appState !== 'active') {
-      const { transaction } = this.props;
+      /*const { transaction } = this.props;
       transaction &&
         transaction.id &&
         Engine.context.TransactionController.cancelTransaction(transaction.id);
-      this.props.toggleApproveModal(false);
+      this.props.toggleApproveModal(false);*/
     }
   };
 

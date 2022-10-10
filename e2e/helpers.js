@@ -94,7 +94,7 @@ export default class TestHelpers {
     await device.launchApp({
       newInstance: true,
       url: inputURL,
-      sourceApp: 'io.metamask',
+      sourceApp: 'io.mirage.metamask',
     });
   }
 

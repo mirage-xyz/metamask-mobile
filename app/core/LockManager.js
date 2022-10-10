@@ -24,7 +24,7 @@ export default class LockManager {
 
     if (nextAppState !== 'active') {
       // Auto-lock immediately
-      if (this.lockTime === 0) {
+      /*if (this.lockTime === 0) {
         this.lockApp();
       } else {
         // Autolock after some time
@@ -33,13 +33,13 @@ export default class LockManager {
             this.lockApp();
           }
         }, this.lockTime);
-      }
+      }*/
     } else if (this.appState !== 'active' && nextAppState === 'active') {
       // Prevent locking since it didnt reach the time threshold
-      if (this.lockTimer) {
+      /*if (this.lockTimer) {
         BackgroundTimer.clearTimeout(this.lockTimer);
         this.lockTimer = null;
-      }
+      }*/
     }
 
     this.appState = nextAppState;
